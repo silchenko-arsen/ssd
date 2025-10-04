@@ -50,24 +50,24 @@ interface AuthResponse {
 
 const auth = {
     login: async(credentials: AuthRequest): Promise<AuthResponse> => {
-        const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}/api/auth/login`, credentials);
-        Cookies.set('token', response.data, {secure: false, sameSite: "strict"}) //change secure: true
+        const response = await api.post(`/auth/login`, credentials);
+        Cookies.set('token', response.data, {secure: true, sameSite: "strict"}) //change secure: true
         console.log('Complete login ;d')
         return response.data
     },
 
 
     register: async (credentials: AuthRequest): Promise<AuthResponse> => {
-        const response = await axios.post<AuthResponse>(`${import.meta.env.VITE_APP_BASE_URL}/api/auth/register`, credentials)
+        const response = await api.post<AuthResponse>(`/auth/register`, credentials)
         // Cookies.set('token', response.data, {secure: false, sameSite: "strict"})//change secure: true
         console.log(response.data)
         return response.data
     },
 
     verifi:async (credentials: AuthRequest): Promise<AuthResponse> => {
-         const response = await axios.post<AuthResponse>(`${import.meta.env.VITE_APP_BASE_URL}/api/auth/verify`, credentials)
+         const response = await api.post<AuthResponse>(`/auth/verify`, credentials)
         // @ts-ignore
-        Cookies.set('token', response.data, {secure: false, sameSite: "strict"})//change secure: true
+        Cookies.set('token', response.data, {secure: true, sameSite: "strict"})//change secure: true
          console.log(response.data)
          return response.data
     },

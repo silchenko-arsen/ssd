@@ -119,9 +119,12 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true); // Дозволити передачу cookie та авторизаційних заголовків
+        configuration.setAllowCredentials(true); // Дозволити cookie та авторизаційні заголовки
 
-        configuration.addAllowedOriginPattern("*"); // Дозволити всі походження
+        // Дозволити будь-який порт на цьому домені
+        configuration.addAllowedOriginPattern("http://host-176-36-217-137.b024.la.net.ua*");
+        configuration.addAllowedOriginPattern("https://host-176-36-217-137.b024.la.net.ua*");
+
         configuration.addAllowedHeader("*"); // Дозволити всі заголовки
         configuration.addAllowedMethod("*"); // Дозволити всі методи (GET, POST, PUT, DELETE тощо)
 
@@ -130,8 +133,23 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        return new CorsFilter(corsConfigurationSource()); // Повертаємо фільтр
-    }
+
+//    @Bean
+//    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowCredentials(true); // Дозволити передачу cookie та авторизаційних заголовків
+//
+//        configuration.addAllowedOriginPattern("*"); // Дозволити всі походження
+//        configuration.addAllowedHeader("*"); // Дозволити всі заголовки
+//        configuration.addAllowedMethod("*"); // Дозволити всі методи (GET, POST, PUT, DELETE тощо)
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration); // Реєстрація конфігурації CORS
+//        return source;
+//    }
+
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        return new CorsFilter(corsConfigurationSource()); // Повертаємо фільтр
+//    }
 }

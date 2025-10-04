@@ -28,7 +28,7 @@ services:
       redishost: redis                                #SPRING_REDIS_HOST: redis
       redisport: 6379                                #SPRING_REDIS_PORT: 6379
 
-      fdomain: http://localhost:8081
+      fdomain: http://host-176-36-217-137.b024.la.net.ua
 
     ports:
       - "8080:8080"
@@ -38,6 +38,42 @@ services:
     networks:
       - ssd_network
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    volumes:
+      # Конфігурації серверів
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      # Папка для certbot challenge
+      - ./nginx/html:/var/www/html:rw
+      # Сертифікати, отримані certbot
+      - ./nginx/certs:/etc/letsencrypt:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - front-end
+      - server
+    networks:
+      - ssd_network
+
+
+#  nginx:
+#    image: nginx:latest
+#    container_name: nginx
+#    volumes:
+#      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+#      - ./nginx/html:/var/www/html:rw
+#    ports:
+#      - "80:80"
+#    depends_on:
+#      - front-end
+#      - server
+#    networks:
+#      - ssd_network
+
+
   postgres:
     image: postgres:14
     container_name: ssd_postgres
@@ -46,7 +82,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: SSD
     ports:
-      - "5431:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -58,6 +94,17 @@ services:
     ports:
       - "6379:6379"
     networks:
+      - ssd_network
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./nginx/certs:/etc/letsencrypt
+      - ./nginx/html:/var/www/html
+    entrypoint: >
+      sh -c "certbot certonly --webroot --webroot-path=/var/www/html --email denzeml313@gmail.com --agree-tos --no-eff-email -d host-176-36-217-137.b024.la.net.ua"
+      
+      networks:
       - ssd_network
 
 
